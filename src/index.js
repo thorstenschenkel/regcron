@@ -1,5 +1,5 @@
 
-const AllEventsParser = require('./AllEventsParser');
+const AllEventsParser = require('./allEventsParser');
 
 exports.handler = function (event, context, callback) {
 

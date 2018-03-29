@@ -39,7 +39,7 @@ class AllEventsParser {
                     return;
                 }
                 const contentType = response.headers['content-type'];
-                console.dbg(' -- t7 -- WRN -- content-type of HTML: ' + contentType);
+                console.info(' -- t7 -- DBG -- content-type of HTML: ' + contentType);
                 // TODO check contentType
                 _bodyPromise(response, resolve);
             }).on('error', function (e) {

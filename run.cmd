@@ -1,0 +1,1 @@
+.\node_modules\.bin\lambda-local.cmd -l .\src\index.js -h handler -e .\examples\run-data.js
