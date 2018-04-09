@@ -20,7 +20,6 @@ class Event {
     }
 
     isOver() {
-        return false;
         let now = new Date();
         now = normalizeDate(now);
         let eventDate = stringToDate(this.dateStrg);
