@@ -1,0 +1,27 @@
+{
+  "name": "regcron",
+  "version": "1.0.0",
+  "description": "scans all events of runnershome.net (coderesearch.com) and stores every night the current number of registrations",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2"
+  },
+  "devDependencies": {
+    "jshint": "^2.9.5",
+    "lambda-local": "^1.4.7"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thorstenschenkel/regcron.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thorstenschenkel/regcron/issues"
+  },
+  "homepage": "https://github.com/thorstenschenkel/regcron#readme"
+}
