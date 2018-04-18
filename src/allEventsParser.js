@@ -34,13 +34,22 @@ function parseCompetition(htmlElement) {
 function parseHtml(htmlPage, events) {
 
     const dom$ = cheerio.load(htmlPage);
-    const competitionRows = dom$('div', '#competitions').nextAll('.competition');
-    dom$(competitionRows).each(function () {
-        let event = parseCompetition(dom$(this));
-        if (event && !event.isOver() && events.length < 5 ) { // TODO 
+    const competitions = dom$('div', '#competitions');
+    const competitionRows = competitions.nextAll('.competition');
+    if (competitionRows.length > 0) {
+        dom$(competitionRows).each(function () {
+            let event = parseCompetition(dom$(this));
+            if (event && !event.isOver() && events.length < 5) { // TODO 
+                events.push(event);
+            }
+        });
+    } else {
+        const competitionRow = competitions.first();
+        let event = parseCompetition(competitionRow);
+        if (event && !event.isOver()) {
             events.push(event);
         }
-    });
+    }
 
     return events;
 
