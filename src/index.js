@@ -9,6 +9,12 @@ exports.handler = function (event, context, callback) {
 
 };
 
+async function parseOneContest(event) {
+
+    let htmlPage = await OneEventParser.getOneEventPromise(event);
+    event = OneEventParser.parseHtml(htmlPage, event);
+}
+
 async function parseAll() {
 
     const now = new Date();
@@ -17,17 +23,16 @@ async function parseAll() {
     let events = [];
     try {
         // this year
-        let htmlPag = await AllEventsParser.getAllEventsPromise(thisYear);
-        events = AllEventsParser.parseHtml(htmlPag, events);
+        let htmlPage = await AllEventsParser.getAllEventsPromise(thisYear);
+        events = AllEventsParser.parseHtml(htmlPage, events);
         console.log(' -- t7 -- DBG -- events: ' + events.length);
         // next year
         const nextYear = thisYear + 1;
-        htmlPag = await AllEventsParser.getAllEventsPromise(nextYear);
-        events = AllEventsParser.parseHtml(htmlPag, events);
+        htmlPage = await AllEventsParser.getAllEventsPromise(nextYear);
+        events = AllEventsParser.parseHtml(htmlPage, events);
         console.log(' -- t7 -- DBG -- events: ' + events.length);
         for (const event of events) {
-            htmlPage = await OneEventParser.getOneEventPromise(event);
-            // TODO
+            parseOneContest(event);
         }        
     } catch (error) {
         console.error(' -- t7 -- ERR -- Promise error: ', error);

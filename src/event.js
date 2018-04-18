@@ -17,6 +17,7 @@ class Event {
         this.name = name;
         this.dateStrg = dateStrg;
         this.url = url;
+        this.contests = [];
     }
 
     isOver() {
@@ -25,6 +26,10 @@ class Event {
         let eventDate = stringToDate(this.dateStrg);
         eventDate = normalizeDate(eventDate);
         return eventDate - now < 0;
+    }
+
+    addContest( contest ) {
+        this.contests.push(contest);
     }
 
 }
