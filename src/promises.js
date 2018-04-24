@@ -18,7 +18,6 @@ function getGetPromise(path) {
     return new Promise((resolve, reject) => {
 
         http.get(path, function (response) {
-            console.warn(' -- t7 -- DBG -- path: ' + path);
             const { statusCode } = response;
             if (statusCode !== 200) {
                 console.err(' -- t7 -- ERR -- Can not get HTML page over http: ' + `Status Code: ${statusCode}`);

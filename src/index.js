@@ -1,5 +1,6 @@
 const OneEventParser = require('./oneEventParser');
 const AllEventsParser = require('./allEventsParser');
+const Year = require('./year');
 
 exports.handler = function (event, context, callback) {
 
@@ -24,17 +25,15 @@ async function parseOneContest(event) {
 
 async function parseAll() {
 
-    const now = new Date();
-    const thisYear = now.getFullYear();
-
     let events = [];
     try {
         // this year
+        const thisYear = Year.getThisYear();
         let htmlPage = await AllEventsParser.getAllEventsPromise(thisYear);
         events = AllEventsParser.parseHtml(htmlPage, events);
         console.log(' -- t7 -- DBG -- events: ' + events.length);
         // next year
-        const nextYear = thisYear + 1;
+        const nextYear = Year.getNextYear();
         htmlPage = await AllEventsParser.getAllEventsPromise(nextYear);
         events = AllEventsParser.parseHtml(htmlPage, events);
         console.log(' -- t7 -- DBG -- events: ' + events.length);        
