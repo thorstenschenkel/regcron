@@ -1,6 +1,6 @@
 const Promises = require('./promises');
 const cheerio = require('cheerio');
-const Contest = require('./contest');
+const Contest = require('./model/contest');
 
 function getOneEventPromise(event) {
 

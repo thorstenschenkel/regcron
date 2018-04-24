@@ -1,6 +1,19 @@
+'use strict';
+
 const OneEventParser = require('./oneEventParser');
 const AllEventsParser = require('./allEventsParser');
-const Year = require('./year');
+const Year = require('./utils/year');
+const DbHelper = require('./dbHelper');
+
+//=========================================================================================================================================
+// DB
+//=========================================================================================================================================
+
+const DB_PWD = 'Byd0RYnRUq1S9Nkp'; // process.env.DB_PWD;
+const DB_URI = 'mongodb://snowinfo:' + DB_PWD + '@cluster0-shard-00-00-bavvq.mongodb.net:27017,cluster0-shard-00-01-bavvq.mongodb.net:27017,cluster0-shard-00-02-bavvq.mongodb.net:27017/snowinfo?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin';
+
+const dbHelper = new DbHelper(DB_URI);
+
 
 exports.handler = function (event, context, callback) {
 
@@ -20,7 +33,8 @@ async function parseOneContest(event) {
         const msg = `-- t7 - DBG -- contest: ${c.name} (${c.count})`;
         console.log(msg);
     }
-    return event;
+    dbHelper.storeEventInDB(event);
+
 }
 
 async function parseAll() {

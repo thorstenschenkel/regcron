@@ -1,6 +1,6 @@
 const cheerio = require('cheerio');
 const Promises = require('./promises');
-const Event = require('./event');
+const Event = require('./model/event');
 
 
 function getAllEventsPromise(year) {
