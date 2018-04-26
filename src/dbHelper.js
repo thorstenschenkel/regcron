@@ -26,37 +26,44 @@ class DbHelper {
 
     async storeEventInDB(event) {
 
-        const eventDb = this._createEventDb(event);
-        const msg = `-- t7 - DBG -- store event: ${event.name})`;
-        console.log(msg);
-
-        // try {
-        //     const client = await MongoClient.connect(this.dbUri);
-        //     console.log("Connected correctly to server");
-        //     const db = client.db(DB_NAME);
-        //     const insertRet = await db.collection(DB_COLLECTION).insertOne(eventDb);
-        //     if (!insertRet || insertRet.insertedCount != 1) {
-        //         console.error(' -- t7 -- ERR -- can not insert event!');
-        //     }
-        //     client.close();
-        // } catch (err) {
-        //     console.error(' -- t7 -- ERR -- store error: ', err.stack);
-        // }
-
         try {
+
+            console.log('-- t7 - DBG -- storeEventInDB');
+
             const client = await MongoClient.connect(this.dbUri);
-            console.log("Connected correctly to server");
             const db = client.db(DB_NAME);
-            const query = { name: eventDb.name };
-            const options = { upsert: true };
-            const updateResult = await db.collection(DB_COLLECTION).updateOne(query, eventDb, options);
-            if (!updateResult || (updateResult.nUpserted === 0 && updateResult.nModified === 0)) {
-                console.error(' -- t7 -- ERR -- can not store/update event!');
+
+            const query = { name: event.name };
+            let eventDb = await db.collection(DB_COLLECTION).findOne();
+
+            if (eventDb) {
+
+                console.log('-- t7 - DBG -- replaceOne');
+                const options = { upsert: true };
+                const updateResult = await db.collection(DB_COLLECTION).replaceOne(query, eventDb, options);
+                if (!updateResult || (updateResult.nUpserted === 0 && updateResult.nModified === 0)) {
+                    console.error(' -- t7 -- ERR -- can not store/update event!');
+                } else {
+                    const msg = `-- t7 - DBG -- replaced : ${updateResult.nUpserted} / ${updateResult.nModified})`;
+                    console.log(msg);
+                }
+
             } else {
-                const msg = `-- t7 - DBG -- stored : ${updateResult.nUpserted} / ${updateResult.nModified})`;
-                console.log(msg);
+
+                console.log('-- t7 - DBG -- insertOne');
+                eventDb = this._createEventDb(event);
+
+                const insertRet = await db.collection(DB_COLLECTION).insertOne(eventDb);
+                if (!insertRet || insertRet.insertedCount != 1) {
+                    console.error(' -- t7 -- ERR -- can not insert event!');
+                } else {
+                    const msg = `-- t7 - DBG -- inseted : ${insertRet.insertedCount})`;
+                    console.log(msg);
+                }
             }
-                client.close();
+
+            client.close();
+
         } catch (err) {
             console.error(' -- t7 -- ERR -- store error: ', err.stack);
         }
