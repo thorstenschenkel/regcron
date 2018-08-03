@@ -27,12 +27,12 @@ async function parseOneContest(event) {
 
     let htmlPage = await OneEventParser.getOneEventPromise(event);
     event = OneEventParser.parseHtml(htmlPage, event);
-    const msg = `-- t7 - DBG -- event: ${event.name} (${event.contests.length})`;
-    console.log(msg);
-    for (const c of event.contests) {
-        const msg = `-- t7 - DBG -- contest: ${c.name} (${c.count})`;
-        console.log(msg);
-    }
+    // const msg = `-- t7 - DBG -- event: ${event.name} (${event.contests.length})`;
+    // console.log(msg);
+    // for (const c of event.contests) {
+    //     const msg = `-- t7 - DBG -- contest: ${c.name} (${c.count})`;
+    //     console.log(msg);
+    // }
     dbHelper.storeEventInDB(event);
 
 }
@@ -45,14 +45,14 @@ async function parseAll() {
         const thisYear = Year.getThisYear();
         let htmlPage = await AllEventsParser.getAllEventsPromise(thisYear);
         events = AllEventsParser.parseHtml(htmlPage, events);
-        console.log(' -- t7 -- DBG -- events: ' + events.length);
+        console.log(' -- t7 -- DBG -- events (this year): ' + events.length);
         // next year
         const nextYear = Year.getNextYear();
         htmlPage = await AllEventsParser.getAllEventsPromise(nextYear);
         events = AllEventsParser.parseHtml(htmlPage, events);
-        console.log(' -- t7 -- DBG -- events: ' + events.length);        
+        console.log(' -- t7 -- DBG -- events (this and next year): ' + events.length);        
         for (let event of events) {
-            event = parseOneContest(event);
+            event = await parseOneContest(event);
         }
     } catch (error) {
         console.error(' -- t7 -- ERR -- Promise error: ', error);

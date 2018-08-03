@@ -1,4 +1,4 @@
-const http = require('http');
+const https = require('https');
 
 function _bodyPromise(response, resolve) {
     let body = '';
@@ -17,7 +17,7 @@ function getGetPromise(path) {
 
     return new Promise((resolve, reject) => {
 
-        http.get(path, function (response) {
+        https.get(path, function (response) {
             const { statusCode } = response;
             if (statusCode !== 200) {
                 console.err(' -- t7 -- ERR -- Can not get HTML page over http: ' + `Status Code: ${statusCode}`);

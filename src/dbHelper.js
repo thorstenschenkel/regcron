@@ -12,53 +12,44 @@ class DbHelper {
 
     constructor(dbUri) {
         this.dbUri = dbUri;
-    }
-
-    _createEventDb(event) {
-        const year = event.getYear();
-        const eventDb = new EventDb(event.name, event.dateStrg, year);
-        for (const contest of event.contests) {
-            let contestDb = eventDb.addContest(contest.name);
-            contestDb.addCount(contest.count);
-        }
-        return eventDb;
+        this.cache = {};
     }
 
     async storeEventInDB(event) {
 
         try {
 
-            console.log('-- t7 - DBG -- storeEventInDB');
-
             const client = await MongoClient.connect(this.dbUri);
             const db = client.db(DB_NAME);
+            const newEventDb = new EventDb(event.name, event.dateStrg, event.getYear());
 
             const query = { name: event.name };
-            let eventDb = await db.collection(DB_COLLECTION).findOne();
+            const eventDb = await db.collection(DB_COLLECTION).findOne(query);
 
             if (eventDb) {
 
-                console.log('-- t7 - DBG -- replaceOne');
+                newEventDb.addContests(eventDb.contests);                
+                newEventDb.addContests(event.contests);
+
                 const options = { upsert: true };
-                const updateResult = await db.collection(DB_COLLECTION).replaceOne(query, eventDb, options);
-                if (!updateResult || (updateResult.nUpserted === 0 && updateResult.nModified === 0)) {
+                const updateResult = await db.collection(DB_COLLECTION).replaceOne(query, newEventDb, options);
+                if (!updateResult) {
                     console.error(' -- t7 -- ERR -- can not store/update event!');
                 } else {
-                    const msg = `-- t7 - DBG -- replaced : ${updateResult.nUpserted} / ${updateResult.nModified})`;
-                    console.log(msg);
+                    // const msg = '-- t7 - DBG -- replaced';
+                    // console.log(msg);
                 }
 
             } else {
 
-                console.log('-- t7 - DBG -- insertOne');
-                eventDb = this._createEventDb(event);
+                newEventDb.addContests(event.contests);
 
-                const insertRet = await db.collection(DB_COLLECTION).insertOne(eventDb);
+                const insertRet = await db.collection(DB_COLLECTION).insertOne(newEventDb);
                 if (!insertRet || insertRet.insertedCount != 1) {
                     console.error(' -- t7 -- ERR -- can not insert event!');
                 } else {
-                    const msg = `-- t7 - DBG -- inseted : ${insertRet.insertedCount})`;
-                    console.log(msg);
+                    // const msg = `-- t7 - DBG -- inserted : ${insertRet.insertedCount}`;
+                    // console.log(msg);
                 }
             }
 
@@ -69,7 +60,7 @@ class DbHelper {
         }
 
     }
-
+    
 }
 
 module.exports = DbHelper;

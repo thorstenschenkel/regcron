@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
+    "jasmine-node": "^1.15.0",
     "mongodb": "^3.0.7"
   },
   "devDependencies": {

@@ -5,7 +5,7 @@ const Event = require('./model/event');
 
 function getAllEventsPromise(year) {
 
-    const ALL_EVENT_URL = 'http://coderesearch.com/sts/services/10020';
+    const ALL_EVENT_URL = 'https://coderesearch.com/sts/services/10020';
     const path = ALL_EVENT_URL + '/' + year;
     return Promises.getGetPromise(path);
 
@@ -39,7 +39,7 @@ function parseHtml(htmlPage, events) {
     if (competitionRows.length > 0) {
         dom$(competitionRows).each(function () {
             let event = parseCompetition(dom$(this));
-            if (event && !event.isOver() && events.length < 5) { // TODO 
+            if (event && !event.isOver() && events.length < 50000 ) {
                 events.push(event);
             }
         });
