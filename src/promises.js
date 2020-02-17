@@ -16,11 +16,12 @@ function _bodyPromise(response, resolve) {
 function getGetPromise(path) {
 
     return new Promise((resolve, reject) => {
-
+        
         https.get(path, function (response) {
             const { statusCode } = response;
             if (statusCode !== 200) {
-                console.err(' -- t7 -- ERR -- Can not get HTML page over http: ' + `Status Code: ${statusCode}`);
+                console.log(' -- t7 -- LOG -- path: ' + `${path}`);
+                console.error(' -- t7 -- ERR -- Can not get HTML page over https: ' + `Status Code: ${statusCode}`);
                 response.resume();
                 reject(new Error('Failed to load page: ' + `Status Code: ${statusCode}`));
                 return;
@@ -29,11 +30,11 @@ function getGetPromise(path) {
             if (contentType && contentType.indexOf('application/json') !== 0) {
                 _bodyPromise(response, resolve);
             } else {
-                console.err(' -- t7 -- ERR -- Unexpected contentType: ' + contentType);
+                console.error(' -- t7 -- ERR -- Unexpected contentType: ' + contentType);
                 reject(new Error('Failed to load page'));
             }
         }).on('error', function (e) {
-            console.warn(' -- t7 -- WRN -- Can not get HTML page over http: ' + e.message);
+            console.warn(' -- t7 -- WRN -- Can not get HTML page over https: ' + e.message);
             reject(new Error('Failed to load page'));
         });
 

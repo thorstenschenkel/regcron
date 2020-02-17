@@ -5,7 +5,8 @@ const Event = require('./model/event');
 
 function getAllEventsPromise(year) {
 
-    const ALL_EVENT_URL = 'https://coderesearch.com/sts/services/10020';
+    // const ALL_EVENT_URL = 'https://coderesearch.com/sts/services/10020';
+    const ALL_EVENT_URL = 'https://runtix.com/sts/10020';
     const path = ALL_EVENT_URL + '/' + year;
     return Promises.getGetPromise(path);
 
